@@ -3,7 +3,7 @@
 
 from flask import Flask, render_template, redirect, url_for
 from flask_pymongo import PyMongo
-import scraping
+#import scraping
 
 app = Flask(__name__)
 
@@ -26,7 +26,7 @@ def scrape():
    return redirect('/', code=302)
 
 #update the database
-.update_one(query_parameter, {"$set": data}, options)
+#.update_one(query_parameter, {"$set": data}, options)
 
 #run flask
 if __name__ == "__main__":
