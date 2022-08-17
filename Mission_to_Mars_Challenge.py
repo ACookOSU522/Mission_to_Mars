@@ -124,7 +124,7 @@ df.to_html()
 #browser.quit()
 
 
-# In[20]:
+# In[16]:
 
 
 # Import Splinter, BeautifulSoup, and Pandas
@@ -219,31 +219,28 @@ print(f'Found {len(relative_urls)} URLs')
 base_url = 'https://astrogeology.usgs.gov'
 
 # 3. Write code to retrieve the image urls and titles for each hemisphere.
-for relative_url in relative_urls:
+for x in range (4):
     hemispheres = {}
+    try:
+        #loop to find all elements
+        browser.find_by_css("a.product-item h3")[x].click()
+    except BaseException:
+        print(f'Bad img-url link (hemispheres_images_urls) ... try again',end='')
+   
+    #find sample
+    sample_elem= browser.links.find_by_text('Sample').first
+    hemispheres['img_url'] = sample_elem['href']
     
-    full_url = f'{base_url}{relative_url}'
-    browser.visit(full_url)
-    browser.links.find_by_text('Open').click()
+    #get titles
+    title = browser.find_by_css("h2.title").text
+    hemispheres["title"]= title
     
-    html = browser.html
-    urls_soup = soup(html, 'html.parser')
-    
-    downloads_div = urls_soup.find('div', class_='downloads')
-    img_anchor = downloads_div.find('a', text=re.compile('Sample'))****
-    img_url = img_anchor['href']
-    print(f'--> url: {img_url}')
-    
-    title_elem = urls_soup.select_one('div.content')
-    title = title_elem.find("h2", class_='title').get_text()
-    print(f'--> title: {title}')
-    hemispheres = {
-        'img_url': img_url,
-        'title': title,
-    }
+    #append hemispheres
     hemisphere_image_urls.append(hemispheres)
 
-print('Done')
+    #loop until all 4 done
+    browser.back()
+
 
 # 4. Print the list that holds the dictionary of each image url and title.
 hemisphere_image_urls
